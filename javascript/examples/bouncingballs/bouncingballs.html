@@ -1,0 +1,28 @@
+<!--
+  Based on "Hello World" example included in mxGraph repo.
+-->
+<html>
+<head>
+	<title>Bouncing Balls with mxGraph!</title>
+
+	<!-- Sets the basepath for the library if not in same directory -->
+	<script type="text/javascript">
+		mxBasePath = '../../src';
+	</script>
+
+	<script type="text/javascript" src="../../src/js/mxClient.js"></script>
+
+	<script type="text/javascript" src="bouncingballs.js"></script>
+</head>
+
+<!-- Page passes the container for the graph to the program -->
+<body onload="main(document.getElementById('graphContainer'))">
+	<h1>Bouncing balls with mxGraph</h1>
+	<p>Click on canvas to create a ball.<br />
+		Click on (moving) ball to select, move and resize.<br />
+		To deselect, right-click on empty canvas.</p>
+	<div id="graphContainer"
+		style="position:relative;overflow:hidden;width:640;height:480;background:url('../editors/images/grid.gif');cursor:default;">
+	</div>
+</body>
+</html>
