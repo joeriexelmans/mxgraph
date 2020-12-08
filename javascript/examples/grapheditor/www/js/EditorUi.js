@@ -2831,15 +2831,15 @@ EditorUi.prototype.isSelectionAllowed = function(evt)
  */
 EditorUi.prototype.addBeforeUnloadListener = function()
 {
-	// Installs dialog if browser window is closed without saving
-	// This must be disabled during save and image export
-	window.onbeforeunload = mxUtils.bind(this, function()
-	{
-		if (!this.editor.isChromelessView())
-		{
-			return this.onBeforeUnload();
-		}
-	});
+	// // Installs dialog if browser window is closed without saving
+	// // This must be disabled during save and image export
+	// window.onbeforeunload = mxUtils.bind(this, function()
+	// {
+	// 	if (!this.editor.isChromelessView())
+	// 	{
+	// 		return this.onBeforeUnload();
+	// 	}
+	// });
 };
 
 /**

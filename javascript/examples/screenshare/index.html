@@ -1,0 +1,74 @@
+<html>
+<head>
+  <title>Screenshare with mxGraph</title>
+  <style> body { background-color: #eee; } </style>
+
+  <!-- Sets the basepath for the library if not in same directory -->
+  <script type="text/javascript">
+    mxBasePath = '../src';
+  </script>
+
+  <script type="text/javascript" src="../src/js/mxClient.js"></script>
+
+  <script type="text/javascript" src="../../../../websockets/uuidv4.min.js"></script>
+  <script type="text/javascript" src="../../../../websockets/common.js"></script>
+  <script type="text/javascript" src="../../../../websockets/client.js"></script>
+  <script type="text/javascript" src="../../../../lib/screenshare.js"></script>
+
+  <script type="text/javascript">
+function run(container) {
+  // Disables the browser's context menu
+  mxEvent.disableContextMenu(container);
+
+  // Creates the graph inside the given container
+  const graph = new mxGraph(container);
+
+  // Enables rubberband selection
+  new mxRubberband(graph);
+
+  // all known peers
+  let peers = [];
+
+  let websocketOrigin;
+  if (document.location.protocol === "https:") {
+    websocketOrigin = "wss://" + document.location.origin.substring(8);
+  } else {
+    websocketOrigin = "ws://" + document.location.origin.substring(7);
+  }
+
+  const ourId = uuidv4();
+  const client = new Client(websocketOrigin + "/websocket", ourId);
+
+  client.on('connected', () => {
+    document.body.appendChild(document.createTextNode("Connected as " + shortUUID(client.uuid) + "."))
+  })
+
+  client.on('receivePush', (what, data) => {
+    if (what === "peers") {
+      you = data.you;
+      peers = data.peers.filter(p => p !== you);
+    }
+  });
+
+  client.on('disconnected', () => {
+    peers = []
+    document.body.appendChild(document.createTextNode("Disconnected."))
+  })
+
+  new ScreenShare(client, graph,
+    (msg, yes, no) => { if (confirm(msg)) { yes() } else { no() } },
+    alert);
+
+  client.connect();
+}
+  </script>
+</head>
+
+<!-- Page passes the container for the graph to the program -->
+<body onload="run(document.getElementById('graphContainer'))">
+  <h1>Screenshare with mxGraph</h1>
+  <div id="graphContainer"
+    style="position:relative;overflow:hidden;width:640;height:480;background:url('../editors/images/grid.gif');cursor:default;">
+  </div>
+</body>
+</html>
